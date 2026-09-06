@@ -44,6 +44,17 @@ DEFAULT_SETTINGS = {
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
 
+# Patch Dense to allow loading models created with Keras 3.13+
+try:
+    from keras.src.layers.core.dense import Dense
+    _orig_dense_init = Dense.__init__
+    def _patched_dense_init(self, *args, **kwargs):
+        kwargs.pop("quantization_config", None)
+        _orig_dense_init(self, *args, **kwargs)
+    Dense.__init__ = _patched_dense_init
+except Exception as _e:
+    print("Dense patch note:", _e)
+
 print("Loading V2 model...")
 model_v2 = tf.keras.models.load_model(MODEL_V2_PATH)
 print("Loading V4 model...")
@@ -503,4 +514,5 @@ def security_action():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    port = 3000
+    app.run(host="0.0.0.0", port=port, debug=False)

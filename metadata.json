@@ -1,0 +1,10 @@
+{
+  "name": "VoiceShield AI Security",
+  "description": "Voice impersonation and deepfake detection system powered by V2 and V4 TensorFlow neural networks.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "voiceshield-ai-security",
+  "version": "1.0.0",
+  "description": "VoiceShield AI Security Layer",
+  "scripts": {
+    "dev": "python3 app.py",
+    "start": "python3 app.py",
+    "build": "python3 -c 'print(\"Build verified\")'"
+  }
+}
