@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VoiceShield AI Security</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">VS</div><div><b>VoiceShield</b><small>AI Security Layer</small></div></div>
+    <div class="nav-label">SECURITY CONSOLE</div>
+    <button class="nav-item active" data-target="detection">◉ <span>Detection</span></button>
+    <button class="nav-item" data-target="live">◉ <span>Live Monitor</span></button>
+    <button class="nav-item" data-target="history">⌁ <span>Event History</span></button>
+    <button class="nav-item" data-target="privacy">◇ <span>Privacy</span></button>
+    <button class="nav-item" data-target="security">◆ <span>Security Center</span></button>
+    <button class="nav-item" data-target="settings">⚙ <span>Settings</span></button>
+    <div class="sidebar-footer"><span class="online-dot"></span><div><b>System Online</b><small>V2 + V4 operational</small></div></div>
+  </aside>
+
+  <main class="main">
+    <header class="hero">
+      <div><div class="eyebrow">CYBERSECURITY / VOICE AUTHENTICITY</div><h1>Voice Impersonation <span>Detection</span></h1><p>Detect synthetic and cloned voices before they become social-engineering attacks.</p></div>
+      <div class="engine"><span class="online-dot"></span><div><b>AI ENGINE</b><small>V2 + V4</small></div></div>
+    </header>
+
+    <section id="detection" class="page-section active-section">
+      <div class="section-title"><div><div class="eyebrow">DETECTION</div><h2>Choose analysis mode</h2><p>Recorded and microphone analysis are separated so the workflow is clear.</p></div><span class="privacy-pill">RAW AUDIO NOT RETAINED</span></div>
+      <div class="mode-tabs"><button class="mode-tab active" data-mode="recorded">Recorded Voice</button><button class="mode-tab" data-mode="live">Live Voice</button></div>
+
+      <div id="recordedPanel" class="mode-panel active-mode">
+        <div class="panel-grid">
+          <div class="input-card">
+            <div class="card-kicker">01 · INPUT</div><h3>Upload a recording</h3><p>WAV, MP3, FLAC, OGG, M4A or WebM. Any duration.</p>
+            <input id="audioFile" type="file" accept="audio/*" hidden>
+            <button class="primary" id="chooseBtn">Choose Audio</button><div id="fileName" class="file-name">No recording selected</div>
+          </div>
+          <div class="input-card reference-card">
+            <div class="card-kicker">02 · OPTIONAL REFERENCE</div><h3>Known genuine voice</h3><p>Upload a historical genuine sample to calculate acoustic cross-session consistency.</p>
+            <input id="referenceFile" type="file" accept="audio/*" hidden>
+            <button class="secondary" id="referenceBtn">Add Reference</button><div id="referenceName" class="file-name">Optional</div>
+          </div>
+        </div>
+        <div class="context-card"><div class="card-kicker">03 · CONTEXT ENRICHMENT</div><div class="context-grid">
+          <label>Language profile<select id="languageProfile"><option>Language-agnostic</option><option>Tamil</option><option>Hindi</option><option>Bengali</option><option>Kannada</option><option>Telugu</option><option>Marathi</option><option>Malayalam</option></select></label>
+          <label>Caller / contact<input id="contactContext" placeholder="Known contact / unknown caller"></label>
+          <label>Transaction context<input id="transactionContext" placeholder="e.g. payment request"></label>
+        </div><div class="checks"><label><input id="unknownCaller" type="checkbox"> Unknown caller</label><label><input id="sensitiveTransaction" type="checkbox"> Sensitive transaction</label><label><input id="firstContact" type="checkbox"> First contact</label></div></div>
+        <button id="analyzeRecorded" class="analyze">ANALYZE RECORDED VOICE</button>
+      </div>
+
+      <div id="livePanel" class="mode-panel">
+        <div class="live-layout"><div class="live-recorder"><div class="record-orb" id="recordOrb">●</div><h3>Microphone session</h3><p>Start and stop manually. Record for any practical duration, then analyze the complete session.</p><div class="timer" id="recordTimer">00:00</div><div class="record-controls"><button id="startBtn" class="record-btn">● Start Recording</button><button id="stopBtn" class="secondary" disabled>■ Stop</button></div><div id="recordStatus" class="status-text">Microphone ready</div></div>
+          <div class="context-card live-context"><div class="card-kicker">SESSION CONTEXT</div><div class="context-grid"><label>Language profile<select id="liveLanguage"><option>Language-agnostic</option><option>Tamil</option><option>Hindi</option><option>Bengali</option><option>Kannada</option><option>Telugu</option><option>Marathi</option><option>Malayalam</option></select></label><label>Caller / contact<input id="liveContact" placeholder="Known / unknown"></label><label>Transaction<input id="liveTransaction" placeholder="Transaction context"></label></div><div class="checks"><label><input id="liveUnknown" type="checkbox"> Unknown caller</label><label><input id="liveSensitive" type="checkbox"> Sensitive transaction</label><label><input id="liveFirst" type="checkbox"> First contact</label></div></div></div>
+        <button id="analyzeLive" class="analyze" disabled>ANALYZE LIVE SESSION</button>
+      </div>
+    </section>
+
+    <section id="results" class="page-section hidden">
+      <div class="section-title"><div><div class="eyebrow">SECURITY ANALYSIS</div><h2 id="resultTitle">Voice analysis</h2><p id="resultMeta">—</p></div><div id="riskBadge" class="risk-badge">—</div></div>
+      <div class="result-top">
+        <div class="risk-card"><div class="risk-ring"><strong id="riskScore">0%</strong><small>SECURITY RISK</small></div><h3 id="classification">—</h3><p id="riskDescription">—</p><div id="contextAdjustment" class="mini-pill">Context +0</div></div>
+        <div class="scores-card"><h3>AI model evidence</h3><div class="score-row"><span>V2 primary detector</span><div id="v5SecondaryCard" class="metric-card"><strong>Raw V5 Secondary Check</strong><span id="v5SecondaryScore">—</span><small class="v5-note">Runs as a secondary disagreement signal.</small></div><b id="v2Score">—</b><div class="bar"><i id="v2Bar"></i></div></div><div class="score-row"><span>V4 multilingual-enhanced detector</span><b id="v4Score">—</b><div class="bar"><i id="v4Bar"></i></div></div><div class="score-row"><span>Model spoof evidence</span><b id="modelRisk">—</b><div class="bar"><i id="modelBar"></i></div></div><div class="score-row"><span>Security risk after context</span><b id="finalScore">—</b><div class="bar"><i id="finalBar"></i></div></div></div>
+      </div>
+      <div class="decision-card"><div class="decision-icon">!</div><div><h3>Recommended Security Action</h3><p id="recommendation">—</p><small id="responseRequirements" class="response-requirements"></small></div><button id="workflowBtn" class="secondary">Record Recommended Action</button></div>
+
+      <div class="analysis-grid"><div class="info-card"><div class="card-kicker">PROSODY / BEHAVIOR</div><h3>Voice behavior signals</h3><div class="metric-grid"><div><span>Pitch variation</span><b id="pitchVariation">—</b></div><div><span>Energy variation</span><b id="energyVariation">—</b></div><div><span>Pause ratio</span><b id="pauseRatio">—</b></div><div><span>Speaking activity</span><b id="speakingActivity">—</b></div></div><p class="note">Prosody indicators provide supporting behavioral evidence; they are not a standalone deepfake probability.</p></div>
+      <div class="info-card"><div class="card-kicker">CROSS-SESSION</div><h3>Speaker consistency</h3><div class="consistency-score" id="consistencyScore">Not supplied</div><p id="consistencyText">Add a known genuine reference recording to compare compact acoustic signatures across sessions. This is an acoustic consistency signal, not a biometric identity claim.</p></div></div>
+
+      <div class="timeline-card"><div class="timeline-head"><div><div class="card-kicker">SEGMENT ANALYSIS</div><h3>Voice Authenticity Timeline</h3><p>Non-overlapping display regions derived from the overlapping analysis windows.</p></div><span id="durationLabel" class="duration">0:00</span></div><div id="timeline" class="timeline"></div><div class="timeline-scale"><span>0:00</span><span id="timelineEnd">0:00</span></div><div class="legend"><span><i class="real-dot"></i>REAL</span><span><i class="spoof-dot"></i>SPOOF</span></div></div>
+      <div class="audit-card"><div><div class="card-kicker">TAMPER-EVIDENT AUDIT</div><h3>Security event recorded</h3><p>Only security metadata and hashes are retained. Raw voice is deleted after analysis.</p></div><code id="auditId">—</code></div>
+      <p class="disclaimer" id="analysisNote">—</p>
+    </section>
+
+    <section id="history" class="page-section"><div class="section-title"><div><div class="eyebrow">AUDIT TRAIL</div><h2>Security Event History</h2><p>Recent detection and workflow events stored as metadata.</p></div><button id="verifyAudit" class="secondary">Verify Hash Chain</button></div><div id="historyStatus" class="verification">Ready</div><div class="table-wrap"><table><thead><tr><th>Time</th><th>Source</th><th>Risk</th><th>Score</th><th>Audio retained</th><th>Event ID</th></tr></thead><tbody id="historyBody"></tbody></table></div></section>
+
+    <section id="privacy" class="page-section"><div class="section-title"><div><div class="eyebrow">DATA PROTECTION</div><h2>Privacy Center</h2><p>Live retention and audit-integrity status for this installation.</p></div><button id="refreshPrivacy" class="secondary">Refresh Status</button></div><div class="privacy-grid"><div class="privacy-item"><b>Raw audio retention</b><strong id="rawAudioStatus">CHECKING…</strong><span>Uploaded and recorded audio is deleted after analysis.</span></div><div class="privacy-item"><b>Audit storage</b><strong id="auditStorageStatus">CHECKING…</strong><span id="auditStorageDetail">Security events do not store the voice recording.</span></div><div class="privacy-item"><b>Reference audio</b><strong id="referenceAudioStatus">CHECKING…</strong><span>Reference audio is processed only for the current comparison.</span></div><div class="privacy-item"><b>Audit integrity</b><strong id="privacyIntegrityStatus">CHECKING…</strong><span id="privacyIntegrityDetail">Verifying the tamper-evident metadata chain.</span></div></div></section>
+
+    <section id="security" class="page-section"><div class="section-title"><div><div class="eyebrow">RESPONSE & CONTAINMENT</div><h2>Security Center</h2><p>Record a response decision for the most recent analysis, or use a manual incident action.</p></div></div><div class="security-grid"><div class="security-card"><span class="security-icon">⛨</span><h3>High risk</h3><p>Block sensitive authorization and require independent callback or MFA.</p><button class="secondary security-action" data-action="BLOCK SENSITIVE AUTHORIZATION" data-risk="HIGH">Block & audit</button></div><div class="security-card"><span class="security-icon">!</span><h3>Medium risk</h3><p>Pause sensitive actions and perform additional identity verification.</p><button class="secondary security-action" data-action="STEP-UP VERIFICATION" data-risk="MEDIUM">Require verification</button></div><div class="security-card"><span class="security-icon">✓</span><h3>Low risk</h3><p>Continue normal security verification and retain only the audit metadata.</p><button class="secondary security-action" data-action="NORMAL SECURITY CHECK" data-risk="LOW">Continue & audit</button></div></div><div class="workflow-panel"><h3>Recommended response chain</h3><div class="workflow-steps"><span>VOICE CHECK</span><b>→</b><span>RISK SCORE</span><b>→</b><span>CONTEXT</span><b>→</b><span>MFA / CALLBACK</span><b>→</b><span>AUDIT</span></div><div id="securityActionStatus" class="status-text">No response decision recorded in this session.</div></div></section>
+
+    <section id="settings" class="page-section"><div class="section-title"><div><div class="eyebrow">CONFIGURATION</div><h2>Security Settings</h2><p>Configure thresholds and response recommendations.</p></div></div><div class="settings-card"><label>Medium threshold <input id="mediumThreshold" type="number" min="0" max="99" step="1"></label><label>High threshold <input id="highThreshold" type="number" min="1" max="100" step="1"></label><label class="toggle"><input id="mfaHigh" type="checkbox"> Require MFA recommendation for HIGH risk</label><label class="toggle"><input id="callbackHigh" type="checkbox"> Require callback recommendation for HIGH risk</label><label class="toggle"><input id="protectSensitive" type="checkbox"> Protect sensitive transactions</label><button id="saveSettings" class="primary">SAVE SECURITY SETTINGS</button><span id="settingsStatus" class="status-text"></span></div></section>
+
+    <footer>VoiceShield AI · Security layer for voice-channel impersonation detection · Risk score is an engineering security score, not a calibrated probability.</footer>
+  </main>
+</div>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
